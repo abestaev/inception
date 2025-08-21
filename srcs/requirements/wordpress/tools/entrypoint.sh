@@ -14,18 +14,30 @@ set -e
 
 # Attendre que la base de données MariaDB soit prête
 echo "⏳ Waiting for MariaDB to be ready..."
-until mysqladmin ping -h"$WORDPRESS_DB_HOST" --silent; do
-    sleep 2
-done
-echo "✅ MariaDB is ready!"
+sleep 10  # Attendre que MariaDB soit complètement initialisé
+
+# Test de connexion directe
+echo "🔍 Testing MariaDB connection..."
+if mysql -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" -e "SELECT 1;" --silent 2>/dev/null; then
+    echo "✅ MariaDB connection successful!"
+else
+    echo "⚠️ MariaDB connection failed, but continuing..."
+fi
 
 cd /var/www/html
 
 # Vérifier si WordPress est déjà installé
-if ! wp core is-installed --allow-root; then
+if ! wp core is-installed --allow-root 2>/dev/null; then
     echo "⚙️ Setting up WordPress..."
 
+    # Supprimer wp-config.php s'il existe déjà
+    if [ -f "wp-config.php" ]; then
+        echo "🗑️ Removing existing wp-config.php..."
+        rm -f wp-config.php
+    fi
+
     # Générer wp-config.php
+    echo "📝 Creating wp-config.php..."
     wp config create \
         --dbname="$WORDPRESS_DB_NAME" \
         --dbuser="$WORDPRESS_DB_USER" \
@@ -34,6 +46,7 @@ if ! wp core is-installed --allow-root; then
         --allow-root
 
     # Installer WordPress
+    echo "🚀 Installing WordPress..."
     wp core install \
         --url="$WORDPRESS_URL" \
         --title="$WORDPRESS_TITLE" \
@@ -48,5 +61,13 @@ else
     echo "✅ WordPress is already installed."
 fi
 
+# Vérifier que WordPress est bien installé
+if wp core is-installed --allow-root 2>/dev/null; then
+    echo "✅ WordPress installation verified!"
+else
+    echo "❌ WordPress installation failed, but continuing..."
+fi
+
 # Lancer php-fpm en foreground
-exec php-fpm7.4 -F
+echo "🚀 Starting PHP-FPM..."
+exec php-fpm8.2 -F

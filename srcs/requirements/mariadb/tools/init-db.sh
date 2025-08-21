@@ -1,24 +1,16 @@
 #!/bin/bash
 set -e
 
-# Lancer mysqld en arrière-plan pour l'initialisation
-mysqld_safe --datadir=/var/lib/mysql &
+# Initialiser la base de données si elle n'existe pas
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+    echo "🗄️ Initializing MariaDB database..."
+    mysql_install_db --user=mysql --datadir=/var/lib/mysql
+fi
 
-# Attendre que MySQL soit prêt
-until mysqladmin ping --silent; do
-    sleep 2
-done
+# Créer le répertoire pour le socket
+mkdir -p /run/mysqld
+chown mysql:mysql /run/mysqld
 
-echo "✅ MariaDB is ready, setting up database..."
-
-# Créer DB et utilisateur si pas déjà faits
-mysql -e "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};"
-mysql -e "CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
-mysql -e "GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';"
-mysql -e "FLUSH PRIVILEGES;"
-
-# Arrêter le process background
-mysqladmin shutdown
-
-# Redémarrer MariaDB en mode foreground (docker ne doit pas quitter)
-exec mysqld_safe --datadir=/var/lib/mysql
+# Démarrer MariaDB
+echo "🚀 Starting MariaDB..."
+exec mysqld --user=mysql --datadir=/var/lib/mysql --init-file=/tmp/init.sql

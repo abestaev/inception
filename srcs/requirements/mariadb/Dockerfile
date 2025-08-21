@@ -1,15 +1,14 @@
 FROM debian:bookworm
 
-# Installer mariadb-server
-RUN apt-get update && apt-get install -y mariadb-server \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt install -y mariadb-server && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copier script d’initialisation
-COPY ./tools/init-db.sh /init-db.sh
+COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/
+
+COPY tools/init-db.sh /
+COPY tools/init.sql /tmp/
+
 RUN chmod +x /init-db.sh
 
-# Exposer le port MariaDB
-EXPOSE 3306
-
-# Lancer MariaDB via script
-CMD ["/init-db.sh"]
+ENTRYPOINT [ "/init-db.sh" ]

@@ -5,7 +5,7 @@ DATA_DIR = $(HOME)/data
 MYSQL_DIR = $(DATA_DIR)/mysql
 WORDPRESS_DIR = $(DATA_DIR)/wordpress
 
-.PHONY: all build up down restart clean fclean logs
+.PHONY: all build up down restart clean fclean logs ssl status test
 
 all: build
 
@@ -32,3 +32,22 @@ fclean: clean
 
 logs:
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) logs -f
+
+ssl:
+	@echo "🔐 SSL certificates are generated automatically during build"
+	@echo "📝 To use custom certificates, place them in:"
+	@echo "   - Certificate: ./srcs/requirements/nginx/ssl/cert.crt"
+	@echo "   - Private key: ./srcs/requirements/nginx/ssl/key.key"
+
+status:
+	@echo "📊 Container Status:"
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) ps
+	@echo ""
+	@echo "🌐 Services accessible at:"
+	@echo "   - HTTP:  http://localhost (redirects to HTTPS)"
+	@echo "   - HTTPS: https://localhost"
+	@echo "   - MariaDB: localhost:3306 (localhost only)"
+
+test:
+	@echo "🧪 Test de configuration..."
+	cd srcs && ./test-config.sh

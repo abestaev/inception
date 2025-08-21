@@ -3,6 +3,7 @@ services:
     build: ./requirements/nginx
     container_name: nginx
     ports:
+      - "80:80"
       - "443:443"
     volumes:
       - wordpress_data:/var/www/html
@@ -15,6 +16,8 @@ services:
   wordpress:
     build: ./requirements/wordpress
     container_name: wordpress
+    expose:
+      - "9000"
     volumes:
       - wordpress_data:/var/www/html
     environment:
@@ -22,6 +25,11 @@ services:
       WORDPRESS_DB_USER: ${MYSQL_USER}
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_URL: ${WORDPRESS_URL}
+      WORDPRESS_TITLE: ${WORDPRESS_TITLE}
+      WORDPRESS_ADMIN_USER: ${WORDPRESS_ADMIN_USER}
+      WORDPRESS_ADMIN_PASSWORD: ${WORDPRESS_ADMIN_PASSWORD}
+      WORDPRESS_ADMIN_EMAIL: ${WORDPRESS_ADMIN_EMAIL}
     depends_on:
       - mariadb
     networks:
@@ -31,8 +39,11 @@ services:
   mariadb:
     build: ./requirements/mariadb
     container_name: mariadb
+    ports:
+      - "127.0.0.1:3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+      - ./requirements/mariadb/tools/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -44,18 +55,7 @@ services:
 
 volumes:
   db_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/albestae/data/mysql
-      o: bind
-
   wordpress_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/albestae/data/wordpress
-      o: bind
 
 networks:
   inception:

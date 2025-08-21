@@ -1,10 +1,10 @@
-FROM debian:bullseye
+FROM debian:bookworm
 
 # Installation PHP, php-fpm et extensions nécessaires à WordPress
 RUN apt-get update && apt-get install -y \
-    php7.4 \
-    php7.4-fpm \
-    php7.4-mysql \
+    php8.2 \
+    php8.2-fpm \
+    php8.2-mysql \
     wget \
     tar \
     curl \
@@ -18,7 +18,7 @@ RUN wget https://wordpress.org/latest.tar.gz -P /var/www \
     && mv /var/www/wordpress /var/www/html
 
 # Configuration PHP-FPM
-RUN sed -i 's|listen = /run/php/php7.4-fpm.sock|listen = 9000|' /etc/php/7.4/fpm/pool.d/www.conf \
+RUN sed -i 's|listen = /run/php/php8.2-fpm.sock|listen = 9000|' /etc/php/8.2/fpm/pool.d/www.conf \
     && mkdir -p /run/php
 
 # Donne les bons droits
