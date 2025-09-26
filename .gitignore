@@ -1,6 +1,7 @@
 # Fichiers de configuration sensibles
 .env
 srcs/.env
+!srcs/.env.example
 
 # Secrets et mots de passe
 srcs/secrets/
