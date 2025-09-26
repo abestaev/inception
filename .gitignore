@@ -1,0 +1,29 @@
+# Fichiers de configuration sensibles
+.env
+srcs/.env
+
+# Secrets et mots de passe
+srcs/secrets/
+secrets/
+
+# Fichiers de données persistantes
+srcs/data/
+data/
+
+# Logs
+*.log
+logs/
+
+# Fichiers temporaires
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Fichiers de sauvegarde
+*.bak
+*.backup
+
+# Fichiers de cache
+.cache/
+*.cache

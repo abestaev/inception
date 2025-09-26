@@ -1,7 +1,7 @@
-DOCKER_COMPOSE = docker compose
+DOCKER_COMPOSE ?= docker compose
 DOCKER_COMPOSE_FILE = ./srcs/docker-compose.yml
 
-DATA_DIR = $(HOME)/data
+DATA_DIR = /home/albestae/data
 MYSQL_DIR = $(DATA_DIR)/mysql
 WORDPRESS_DIR = $(DATA_DIR)/wordpress
 
@@ -44,8 +44,8 @@ status:
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) ps
 	@echo ""
 	@echo "🌐 Services accessible at:"
-	@echo "   - HTTP:  http://localhost (redirects to HTTPS)"
-	@echo "   - HTTPS: https://localhost"
+	@echo "   - HTTP:  http://albestae.42.fr (redirects to HTTPS)"
+	@echo "   - HTTPS: https://albestae.42.fr"
 	@echo "   - MariaDB: localhost:3306 (localhost only)"
 
 test:

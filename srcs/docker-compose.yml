@@ -3,10 +3,9 @@ services:
     build: ./requirements/nginx
     container_name: nginx
     ports:
-      - "80:80"
       - "443:443"
     volumes:
-      - wordpress_data:/var/www/html
+      - /home/albestae/data/wordpress:/var/www/html
     depends_on:
       - wordpress
     networks:
@@ -19,19 +18,22 @@ services:
     expose:
       - "9000"
     volumes:
-      - wordpress_data:/var/www/html
+      - /home/albestae/data/wordpress:/var/www/html
     environment:
-      WORDPRESS_DB_HOST: mariadb:3306
-      WORDPRESS_DB_USER: ${MYSQL_USER}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-      WORDPRESS_URL: ${WORDPRESS_URL}
-      WORDPRESS_TITLE: ${WORDPRESS_TITLE}
-      WORDPRESS_ADMIN_USER: ${WORDPRESS_ADMIN_USER}
-      WORDPRESS_ADMIN_PASSWORD: ${WORDPRESS_ADMIN_PASSWORD}
-      WORDPRESS_ADMIN_EMAIL: ${WORDPRESS_ADMIN_EMAIL}
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: ${MYSQL_USER:-wordpress_user}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:-wordpress}
+      WORDPRESS_URL: ${WORDPRESS_URL:-https://albestae.42.fr}
+      WORDPRESS_TITLE: ${WORDPRESS_TITLE:-Inception}
+      WORDPRESS_ADMIN_USER: ${WORDPRESS_ADMIN_USER:-manager}
+      WORDPRESS_ADMIN_EMAIL: ${WORDPRESS_ADMIN_EMAIL:-manager@inception.com}
+    secrets:
+      - mysql_password
+      - wordpress_admin_password
+      - redis_password
     depends_on:
       - mariadb
+      - redis
     networks:
       - inception
     restart: always
@@ -40,22 +42,62 @@ services:
     build: ./requirements/mariadb
     container_name: mariadb
     ports:
-      - "127.0.0.1:3306:3306"
+      - "127.0.0.1:${MARIADB_PORT:-3306}:3306"
     volumes:
-      - db_data:/var/lib/mysql
+      - /home/albestae/data/mysql:/var/lib/mysql
       - ./requirements/mariadb/tools/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-wordpress}
+      MYSQL_USER: ${MYSQL_USER:-wordpress_user}
+    secrets:
+      - mysql_root_password
+      - mysql_password
     networks:
       - inception
     restart: always
 
-volumes:
-  db_data:
-  wordpress_data:
+  redis:
+    build: ./requirements/bonus/redis
+    container_name: redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - /home/albestae/data/redis:/var/lib/redis
+      - ./requirements/bonus/redis/conf/redis.conf:/etc/redis/redis.conf:ro
+    secrets:
+      - redis_password
+    networks:
+      - inception
+    restart: always
+
+  ftp:
+    build: ./requirements/bonus/ftp
+    container_name: ftp
+    ports:
+      - "21:21"
+      - "21000-21010:21000-21010"
+    volumes:
+      - /home/albestae/data/wordpress:/var/www/html
+      - ./requirements/bonus/ftp/conf/proftpd.conf:/etc/proftpd/proftpd.conf:ro
+    secrets:
+      - ftp_password
+    networks:
+      - inception
+    restart: always
+    depends_on:
+      - wordpress
+
+secrets:
+  mysql_root_password:
+    file: ./secrets/mysql_root_password
+  mysql_password:
+    file: ./secrets/mysql_password
+  wordpress_admin_password:
+    file: ./secrets/wordpress_admin_password
+  redis_password:
+    file: ./secrets/redis_password
+  ftp_password:
+    file: ./secrets/ftp_password
 
 networks:
   inception:
