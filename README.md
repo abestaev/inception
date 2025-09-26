@@ -40,6 +40,7 @@ Inception is a multi-container Docker application that sets up a complete WordPr
 ### Bonus Services
 - **Redis** - Object cache for WordPress performance
 - **FTP Server** - File access to WordPress volume
+- **Adminer** - Web-based database administration tool
 
 ## 🛠️ Quick Start
 
@@ -76,6 +77,7 @@ Inception is a multi-container Docker application that sets up a complete WordPr
    - Website: https://localhost or https://albestae.42.fr
    - Admin: https://albestae.42.fr/wp-admin
    - FTP: localhost:21 (user: ftpuser)
+   - Database Admin: http://localhost:8080
 
 ## 🔧 Configuration
 
@@ -147,6 +149,14 @@ inception/
 - Host: localhost
 - Port: 6379
 - Password: (from secrets/redis_password)
+
+### Database Administration (Adminer)
+- URL: http://localhost:8080
+- System: MySQL
+- Server: mariadb
+- Username: wordpress_user
+- Password: (from secrets/mysql_password)
+- Database: wordpress
 
 ## 🛠️ Development
 

@@ -19,6 +19,14 @@ Ce dossier contient les services bonus implémentés pour le projet Inception.
 - **Ports** : 21 (contrôle), 20 (données), 21000-21010 (passif)
 - **Volume** : `/home/albestae/data/wordpress`
 
+### Adminer
+- **Dockerfile** : `adminer/Dockerfile`
+- **Configuration** : `adminer/conf/adminer.conf`
+- **Script de démarrage** : `adminer/tools/start-adminer.sh`
+- **Description** : Interface web d'administration de base de données MariaDB
+- **Port** : 8080
+- **Accès** : http://localhost:8080
+
 ## Utilisation
 
 Ces services sont automatiquement démarrés avec `docker compose up` et sont configurés pour fonctionner avec les services principaux (WordPress, MariaDB, Nginx).
@@ -33,3 +41,11 @@ Ces services sont automatiquement démarrés avec `docker compose up` et sont co
 - **Hôte** : localhost
 - **Port** : 6379
 - **Mot de passe** : redis_password
+
+### Connexion Adminer
+- **URL** : http://localhost:8080
+- **Système** : MySQL
+- **Serveur** : mariadb
+- **Utilisateur** : wordpress_user
+- **Mot de passe** : (depuis secrets/mysql_password)
+- **Base de données** : wordpress
