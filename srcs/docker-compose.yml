@@ -107,6 +107,32 @@ services:
       - inception
     restart: always
 
+  minecraft:
+    image: itzg/minecraft-server:latest
+    container_name: minecraft
+    ports:
+      - "25565:25565"
+    volumes:
+      - /home/albestae/data/minecraft:/data
+    environment:
+      - EULA=TRUE
+      - VERSION=1.20.4
+      - TYPE=VANILLA
+      - MEMORY=2G
+      - ONLINE_MODE=FALSE
+      - DIFFICULTY=normal
+      - GAMEMODE=survival
+      - MAX_PLAYERS=20
+      - PVP=true
+      - ALLOW_NETHER=true
+      - ENABLE_COMMAND_BLOCK=false
+      - MOTD=Inception Minecraft Server
+    networks:
+      - inception
+    restart: always
+    mem_limit: 2g
+    memswap_limit: 2g
+
 secrets:
   mysql_root_password:
     file: ./secrets/mysql_root_password

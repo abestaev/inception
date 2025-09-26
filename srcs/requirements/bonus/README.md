@@ -34,6 +34,14 @@ Ce dossier contient les services bonus implémentés pour le projet Inception.
 - **Port** : 8081
 - **Accès** : http://localhost:8081
 
+### Minecraft Server
+- **Dockerfile** : `minecraft/Dockerfile`
+- **Configuration** : `minecraft/conf/server.properties`
+- **Script de démarrage** : `minecraft/tools/start-minecraft.sh`
+- **Description** : Serveur Minecraft Java Edition 1.20.4
+- **Port** : 25565
+- **Accès** : localhost:25565
+
 ## Utilisation
 
 Ces services sont automatiquement démarrés avec `docker compose up` et sont configurés pour fonctionner avec les services principaux (WordPress, MariaDB, Nginx).
@@ -63,3 +71,12 @@ Ces services sont automatiquement démarrés avec `docker compose up` et sont co
 - **Technologies** : HTML5, CSS3, JavaScript ES6
 - **Fonctionnalités** : Responsive, animations, interactivité
 - **Contenu** : Présentation du projet Inception
+
+### Serveur Minecraft
+- **Adresse** : localhost:25565
+- **Version** : Java Edition 1.20.4
+- **Mode** : Survival
+- **Difficulté** : Normal
+- **Joueurs max** : 20
+- **PvP** : Activé
+- **Nether** : Activé

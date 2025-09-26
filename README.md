@@ -42,6 +42,7 @@ Inception is a multi-container Docker application that sets up a complete WordPr
 - **FTP Server** - File access to WordPress volume
 - **Adminer** - Web-based database administration tool
 - **Static Website** - Modern showcase site in HTML/CSS/JavaScript
+- **Minecraft Server** - Java Edition 1.20.4 game server
 
 ## 🛠️ Quick Start
 
@@ -80,6 +81,7 @@ Inception is a multi-container Docker application that sets up a complete WordPr
    - FTP: localhost:21 (user: ftpuser)
    - Database Admin: http://localhost:8080
    - Static Showcase: http://localhost:8081
+   - Minecraft Server: localhost:25565
 
 ## 🔧 Configuration
 
@@ -166,6 +168,15 @@ inception/
 - Technologies: HTML5, CSS3, JavaScript ES6
 - Features: Animations, interactive elements, mobile-friendly
 - Content: Project showcase and documentation
+
+### Minecraft Game Server
+- Address: localhost:25565
+- Version: Java Edition 1.20.4
+- Game Mode: Survival
+- Difficulty: Normal
+- Max Players: 20
+- Features: PvP enabled, Nether access, command blocks
+- Memory: 2GB allocated
 
 ## 🛠️ Development
 
