@@ -98,6 +98,15 @@ services:
     depends_on:
       - mariadb
 
+  static-website:
+    build: ./requirements/bonus/static-website
+    container_name: static-website
+    ports:
+      - "127.0.0.1:8081:8081"
+    networks:
+      - inception
+    restart: always
+
 secrets:
   mysql_root_password:
     file: ./secrets/mysql_root_password

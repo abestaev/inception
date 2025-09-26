@@ -27,6 +27,13 @@ Ce dossier contient les services bonus implémentés pour le projet Inception.
 - **Port** : 8080
 - **Accès** : http://localhost:8080
 
+### Static Website
+- **Dockerfile** : `static-website/Dockerfile`
+- **Configuration** : `static-website/nginx.conf`
+- **Description** : Site web statique moderne en HTML/CSS/JavaScript
+- **Port** : 8081
+- **Accès** : http://localhost:8081
+
 ## Utilisation
 
 Ces services sont automatiquement démarrés avec `docker compose up` et sont configurés pour fonctionner avec les services principaux (WordPress, MariaDB, Nginx).
@@ -49,3 +56,10 @@ Ces services sont automatiquement démarrés avec `docker compose up` et sont co
 - **Utilisateur** : wordpress_user
 - **Mot de passe** : (depuis secrets/mysql_password)
 - **Base de données** : wordpress
+
+### Site Web Statique
+- **URL** : http://localhost:8081
+- **Type** : Site vitrine moderne
+- **Technologies** : HTML5, CSS3, JavaScript ES6
+- **Fonctionnalités** : Responsive, animations, interactivité
+- **Contenu** : Présentation du projet Inception
