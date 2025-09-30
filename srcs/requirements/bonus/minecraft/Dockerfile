@@ -1,8 +1,9 @@
-FROM openjdk:17-jdk-slim
+FROM debian:bookworm
 
 # Installation des dépendances
 RUN apt-get update && \
     apt-get install -y \
+    openjdk-17-jdk \
     wget \
     curl \
     && rm -rf /var/lib/apt/lists/*

@@ -25,13 +25,16 @@ fi
 # Configurer les permissions pour le volume WordPress
 chown -R ftpuser:ftpuser /var/www/html 2>/dev/null || true
 
+# Lire le mot de passe depuis le secret
+FTP_PASSWORD=$(cat /run/secrets/ftp_password)
+
 # Créer le fichier de mot de passe pour proftpd (format htpasswd)
-echo "ftpuser:ftppassword" | chpasswd
+echo "ftpuser:$FTP_PASSWORD" | chpasswd
 
 echo "✅ FTP Server configuration completed"
 echo "📂 WordPress volume mounted at: /home/ftpuser/ftp/wordpress"
 echo "🔐 FTP User: ftpuser"
-echo "🔑 FTP Password: ftppassword"
+echo "🔑 FTP Password: $FTP_PASSWORD"
 
 # Démarrer proftpd en mode foreground
 echo "🚀 Starting proftpd daemon..."

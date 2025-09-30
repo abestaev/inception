@@ -1,4 +1,9 @@
-FROM nginx:alpine
+FROM debian:bookworm
+
+# Install nginx
+RUN apt-get update && \
+    apt-get install -y nginx curl && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy static website files
 COPY . /usr/share/nginx/html/
