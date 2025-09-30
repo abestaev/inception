@@ -5,7 +5,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - /home/albestae/data/wordpress:/var/www/html
+      - wordpress_data:/var/www/html
     depends_on:
       - wordpress
     networks:
@@ -18,7 +18,7 @@ services:
     expose:
       - "9000"
     volumes:
-      - /home/albestae/data/wordpress:/var/www/html
+      - wordpress_data:/var/www/html
     environment:
       WORDPRESS_DB_HOST: mariadb
       WORDPRESS_DB_USER: ${MYSQL_USER:-wordpress_user}
@@ -44,7 +44,7 @@ services:
     ports:
       - "127.0.0.1:${MARIADB_PORT:-3306}:3306"
     volumes:
-      - /home/albestae/data/mysql:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
       - ./requirements/mariadb/tools/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-wordpress}
@@ -62,7 +62,7 @@ services:
     ports:
       - "127.0.0.1:6379:6379"
     volumes:
-      - /home/albestae/data/redis:/var/lib/redis
+      - redis_data:/var/lib/redis
       - ./requirements/bonus/redis/conf/redis.conf:/etc/redis/redis.conf:ro
     secrets:
       - redis_password
@@ -77,7 +77,7 @@ services:
       - "21:21"
       - "21000-21010:21000-21010"
     volumes:
-      - /home/albestae/data/wordpress:/var/www/html
+      - wordpress_data:/var/www/html
       - ./requirements/bonus/ftp/conf/proftpd.conf:/etc/proftpd/proftpd.conf:ro
     secrets:
       - ftp_password
@@ -113,7 +113,7 @@ services:
     ports:
       - "25565:25565"
     volumes:
-      - /home/albestae/data/minecraft:/data
+      - minecraft_data:/data
     environment:
       - EULA=TRUE
       - VERSION=1.20.4
@@ -144,6 +144,32 @@ secrets:
     file: ./secrets/redis_password
   ftp_password:
     file: ./secrets/ftp_password
+
+volumes:
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/albestae/data/wordpress
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/albestae/data/mysql
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/albestae/data/redis
+  minecraft_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/albestae/data/minecraft
 
 networks:
   inception:
